@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Gift for Dennize</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @keyframes float { 0%, 100% { transform: translateY(0) rotate(-2deg); } 50% { transform: translateY(-10px) rotate(2deg); } }
+        .main-flower { 
+            animation: float 3s ease-in-out infinite; 
+            font-size: 8rem; 
+            filter: drop-shadow(0 10px 20px rgba(59, 130, 246, 0.3));
+        }
+        
+        .falling-letter { 
+            position: absolute; 
+            cursor: pointer; 
+            user-select: none; 
+            font-size: 3.5rem; 
+            font-weight: bold;
+            color: #3b82f6;
+            /* FAST SPEED: 1.5 seconds */
+            animation: fall 1.5s linear forwards; 
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        @keyframes fall { to { transform: translateY(110vh) rotate(45deg); } }
+
+        .envelope-body { width: 320px; height: 200px; background-color: #bfdbfe; position: relative; border-radius: 0 0 12px 12px; cursor: pointer; margin-top: 180px; }
+        
+        .flap { 
+            position: absolute; top: 0; left: 0; width: 0; height: 0; 
+            border-left: 160px solid transparent; border-right: 160px solid transparent; 
+            border-top: 110px solid #93c5fd; transform-origin: top; transition: transform 0.6s ease; z-index: 3;
+        }
+        .flap-open { transform: rotateX(180deg); }
+        
+        .letter { 
+            position: absolute; bottom: 5px; left: 10px; right: 10px; height: 180px; 
+            background: #f8fafc; padding: 25px; border-radius: 8px; transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            z-index: 1; opacity: 0; overflow-y: auto;
+        }
+        
+        .letter-open { 
+            opacity: 1; 
+            transform: translateY(-120px); 
+            height: 250px; 
+            z-index: 4; 
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .bouquet-pop { animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275); font-size: 10rem; }
+        @keyframes popIn {
+            0% { transform: scale(0); opacity: 0; }
+            70% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+
+        .letter::-webkit-scrollbar { width: 4px; }
+        .letter::-webkit-scrollbar-thumb { background: #93c5fd; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-blue-50 min-h-screen flex items-center justify-center overflow-hidden font-serif">
+
+    <div id="stage1" class="text-center flex flex-col items-center">
+        <div class="main-flower mb-4">🌸</div>
+        <h1 class="text-3xl text-blue-800 font-bold mb-8">A Carnation for Dennize</h1>
+        <button onclick="goToGame()" class="bg-blue-400 hover:bg-blue-500 text-white font-bold py-4 px-12 rounded-full shadow-lg transition active:scale-95">
+            Accept Gift
+        </button>
+    </div>
+
+    <div id="stage2" class="hidden fixed inset-0 bg-blue-100 flex flex-col items-center justify-center">
+        <div class="absolute top-10 text-center z-50 pointer-events-none">
+            <h2 class="text-2xl font-bold text-blue-600 mb-2">Catch the Letters!</h2>
+            <div id="name-display" class="flex flex-wrap justify-center gap-2 text-4xl font-black text-blue-200">
+                </div>
+        </div>
+        <div id="game-area" class="w-full h-full relative"></div>
+    </div>
+
+    <div id="stage3" class="hidden flex-col items-center justify-center">
+        <h2 class="text-blue-800 text-2xl font-bold mb-4 animate-pulse">Great job! Open your letter:</h2>
+        <div class="envelope-body shadow-2xl" onclick="openLetter()">
+            <div id="flap" class="flap"></div>
+            <div id="letter" class="letter text-blue-900 border border-blue-100">
+                <p class="font-bold border-b border-blue-100 mb-3 text-lg">Happy Valentine’s, Boks!</p>
+                <div class="text-[14px] leading-relaxed space-y-4">
+                    <p>I just wanted to tell you that I’m really grateful that you came into my life. You’ve made me realize so much about myself, and you’ve genuinely cared about me. Honestly, ever since you came into my life, everything has been better. I’ve been much happier compared to the past few years, you know?</p>
+                    <p>Those late-night talks, sleep calls, movie marathons, and the bonds we’ve shared mean so much to me. You’ve also helped me grow closer to God, and I’m truly thankful for that.</p>
+                    <p>I’m sorry if I’m annoying sometimes or hard-headed, hehe. I just really want to say thank you for always being there.</p>
+                    <p>Even though we just started talking not too long ago, your presence has already helped me a lot. Just you being there makes me happy.</p>
+                    <p>Enjoy your journey in university, I’ll always be here to help in any way I can. Anyways, again Happy Valentines day! Enjoy your dates!</p>
+                </div>
+                <button onclick="showBouquet(event)" class="mt-6 w-full bg-blue-500 hover:bg-blue-600 text-white text-sm py-3 px-4 rounded-lg transition-colors font-sans font-bold shadow-md">
+                    Click for your bouquet 💐
+                </button>
+                <p class="mt-6 text-right font-medium text-blue-600 text-sm">- Boks</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="stage4" class="hidden fixed inset-0 bg-white/95 backdrop-blur-sm z-[100] flex flex-col items-center justify-center text-center p-4">
+        <div class="bouquet-pop">🌸</div>
+        <h2 class="text-4xl font-bold text-blue-800 mt-4">A Full Bouquet for Dennize!</h2>
+        <p class="text-blue-600 mt-2 max-w-xs">Because someone as special as you deserves the world.</p>
+        <button onclick="location.reload()" class="mt-8 text-blue-400 underline text-sm">Read it again</button>
+    </div>
+
+    <script>
+        const nameArray = ['D', 'E', 'N', 'N', 'I', 'Z', 'E'];
+        let currentLetterIndex = 0;
+        let gameInterval;
+        
+        const stage1 = document.getElementById('stage1');
+        const stage2 = document.getElementById('stage2');
+        const stage3 = document.getElementById('stage3');
+        const stage4 = document.getElementById('stage4');
+        const gameArea = document.getElementById('game-area');
+        const nameDisplay = document.getElementById('name-display');
+
+        // Create the name slots
+        nameArray.forEach((letter, index) => {
+            const span = document.createElement('span');
+            span.id = 'L' + index;
+            span.innerText = letter;
+            span.className = 'text-blue-200';
+            nameDisplay.appendChild(span);
+        });
+
+        function goToGame() {
+            stage1.style.display = 'none';
+            stage2.classList.remove('hidden');
+            updateNameDisplay();
+            gameInterval = setInterval(spawnLetter, 400); 
+        }
+
+        function updateNameDisplay() {
+            for(let i=0; i<nameArray.length; i++) {
+                const el = document.getElementById('L' + i);
+                if(el) {
+                    if(i < currentLetterIndex) {
+                        el.className = 'text-blue-500 opacity-100';
+                    } else if (i === currentLetterIndex) {
+                        el.className = 'text-blue-600 scale-125 transition-transform duration-300 font-black';
+                    } else {
+                        el.className = 'text-blue-200';
+                    }
+                }
+            }
+        }
+
+        function spawnLetter() {
+            if (currentLetterIndex >= nameArray.length) {
+                clearInterval(gameInterval);
+                return;
+            }
+            
+            const letter = document.createElement('div');
+            const isTarget = Math.random() > 0.4;
+            const letterToSpawn = isTarget ? nameArray[currentLetterIndex] : nameArray[Math.floor(Math.random() * nameArray.length)];
+            
+            letter.innerHTML = letterToSpawn;
+            letter.className = 'falling-letter';
+            letter.style.left = (Math.random() * 80 + 10) + '%';
+            letter.style.top = '-100px';
+
+            letter.addEventListener('mousedown', (e) => {
+                e.stopPropagation();
+                if (letterToSpawn === nameArray[currentLetterIndex]) {
+                    currentLetterIndex++;
+                    updateNameDisplay();
+                    letter.remove();
+                    
+                    if (currentLetterIndex >= nameArray.length) {
+                        clearInterval(gameInterval);
+                        setTimeout(finishGame, 500);
+                    }
+                }
+            });
+
+            gameArea.appendChild(letter);
+            
+            letter.addEventListener('animationend', () => {
+                if (letter.parentElement) {
+                    letter.remove();
+                }
+            });
+        }
+
+        function finishGame() {
+            stage2.classList.add('hidden');
+            stage3.classList.remove('hidden');
+            stage3.classList.add('flex');
+        }
+
+        function openLetter() {
+            document.getElementById('flap').classList.add('flap-open');
+            setTimeout(() => {
+                document.getElementById('letter').classList.add('letter-open');
+            }, 400);
+        }
+
+        function showBouquet(event) {
+            event.stopPropagation();
+            stage4.classList.remove('hidden');
+            stage4.classList.add('flex');
+        }
+    </script>
+</body>
+</html>
