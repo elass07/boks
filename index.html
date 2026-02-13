@@ -20,19 +20,17 @@
             font-size: 3.5rem; 
             font-weight: bold;
             color: #3b82f6;
-            /* VERY SLOW: Changed to 7 seconds for a dreamy effect */
-            animation: fall-and-sway 7s linear forwards; 
+            /* ADJUSTED SPEED: 3.5 seconds is the "Goldilocks" zone */
+            animation: fall-and-sway 3.5s linear forwards; 
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
             touch-action: none;
         }
 
-        /* Added a sway so they don't just fall straight down */
         @keyframes fall-and-sway {
             0% { transform: translateY(-100px) translateX(0) rotate(0deg); }
-            25% { transform: translateY(25vh) translateX(15px) rotate(10deg); }
-            50% { transform: translateY(50vh) translateX(-15px) rotate(-10deg); }
-            75% { transform: translateY(75vh) translateX(15px) rotate(10deg); }
-            100% { transform: translateY(110vh) translateX(0) rotate(45deg); }
+            33% { transform: translateY(33vh) translateX(10px) rotate(5deg); }
+            66% { transform: translateY(66vh) translateX(-10px) rotate(-5deg); }
+            100% { transform: translateY(110vh) translateX(0) rotate(20deg); }
         }
 
         .envelope-body { width: 320px; height: 200px; background-color: #bfdbfe; position: relative; border-radius: 0 0 12px 12px; cursor: pointer; margin-top: 180px; }
@@ -140,8 +138,8 @@
             stage1.style.display = 'none';
             stage2.classList.remove('hidden');
             updateNameDisplay();
-            // SLOWER SPAWN: 1.2 seconds between letters
-            gameInterval = setInterval(spawnLetter, 1200); 
+            // SPAWN RATE: 600ms keeps the flow moving nicely
+            gameInterval = setInterval(spawnLetter, 600); 
         }
 
         function updateNameDisplay() {
