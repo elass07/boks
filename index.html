@@ -20,9 +20,10 @@
             font-size: 3.5rem; 
             font-weight: bold;
             color: #3b82f6;
-            /* FAST SPEED: 1.5 seconds */
-            animation: fall 1.5s linear forwards; 
+            /* SLOWER SPEED: Changed from 1.5s to 4s */
+            animation: fall 4s linear forwards; 
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            touch-action: none;
         }
         @keyframes fall { to { transform: translateY(110vh) rotate(45deg); } }
 
@@ -119,7 +120,6 @@
         const gameArea = document.getElementById('game-area');
         const nameDisplay = document.getElementById('name-display');
 
-        // Create the name slots
         nameArray.forEach((letter, index) => {
             const span = document.createElement('span');
             span.id = 'L' + index;
@@ -132,7 +132,8 @@
             stage1.style.display = 'none';
             stage2.classList.remove('hidden');
             updateNameDisplay();
-            gameInterval = setInterval(spawnLetter, 400); 
+            // SLOWER SPAWN: Changed from 400 to 800
+            gameInterval = setInterval(spawnLetter, 800); 
         }
 
         function updateNameDisplay() {
@@ -165,7 +166,8 @@
             letter.style.left = (Math.random() * 80 + 10) + '%';
             letter.style.top = '-100px';
 
-            letter.addEventListener('mousedown', (e) => {
+            // Using pointerdown for better mobile responsiveness
+            letter.addEventListener('pointerdown', (e) => {
                 e.stopPropagation();
                 if (letterToSpawn === nameArray[currentLetterIndex]) {
                     currentLetterIndex++;
