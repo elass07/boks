@@ -20,12 +20,20 @@
             font-size: 3.5rem; 
             font-weight: bold;
             color: #3b82f6;
-            /* SLOWER SPEED: Changed from 1.5s to 4s */
-            animation: fall 4s linear forwards; 
+            /* VERY SLOW: Changed to 7 seconds for a dreamy effect */
+            animation: fall-and-sway 7s linear forwards; 
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
             touch-action: none;
         }
-        @keyframes fall { to { transform: translateY(110vh) rotate(45deg); } }
+
+        /* Added a sway so they don't just fall straight down */
+        @keyframes fall-and-sway {
+            0% { transform: translateY(-100px) translateX(0) rotate(0deg); }
+            25% { transform: translateY(25vh) translateX(15px) rotate(10deg); }
+            50% { transform: translateY(50vh) translateX(-15px) rotate(-10deg); }
+            75% { transform: translateY(75vh) translateX(15px) rotate(10deg); }
+            100% { transform: translateY(110vh) translateX(0) rotate(45deg); }
+        }
 
         .envelope-body { width: 320px; height: 200px; background-color: #bfdbfe; position: relative; border-radius: 0 0 12px 12px; cursor: pointer; margin-top: 180px; }
         
@@ -103,7 +111,7 @@
 
     <div id="stage4" class="hidden fixed inset-0 bg-white/95 backdrop-blur-sm z-[100] flex flex-col items-center justify-center text-center p-4">
         <div class="bouquet-pop">🌸</div>
-        <h2 class="text-4xl font-bold text-blue-800 mt-4">A Carnation for Dennize!</h2>
+        <h2 class="text-4xl font-bold text-blue-800 mt-4">A Full Bouquet for Dennize!</h2>
         <p class="text-blue-600 mt-2 max-w-xs">Because someone as special as you deserves the world.</p>
         <button onclick="location.reload()" class="mt-8 text-blue-400 underline text-sm">Read it again</button>
     </div>
@@ -132,8 +140,8 @@
             stage1.style.display = 'none';
             stage2.classList.remove('hidden');
             updateNameDisplay();
-            // SLOWER SPAWN: Changed from 400 to 800
-            gameInterval = setInterval(spawnLetter, 800); 
+            // SLOWER SPAWN: 1.2 seconds between letters
+            gameInterval = setInterval(spawnLetter, 1200); 
         }
 
         function updateNameDisplay() {
@@ -166,7 +174,6 @@
             letter.style.left = (Math.random() * 80 + 10) + '%';
             letter.style.top = '-100px';
 
-            // Using pointerdown for better mobile responsiveness
             letter.addEventListener('pointerdown', (e) => {
                 e.stopPropagation();
                 if (letterToSpawn === nameArray[currentLetterIndex]) {
@@ -211,4 +218,3 @@
     </script>
 </body>
 </html>
-
